@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <span routerLink="/" class="logo">Book Library</span>
+  <span class="spacer"></span>
+
+  <button mat-button routerLink="/books">Books</button>
+  <button mat-button routerLink="/genres">Genres</button>
+
+  @if (isAdmin()) {
+    <button mat-button routerLink="/admin">Admin Dashboard</button>
+  }
+
+  @if (isLoggedIn()) {
+    <span class="user-email">{{ userEmail() }}</span>
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  } @else {
+    <button mat-button routerLink="/login">Login</button>
+  }
+</mat-toolbar>

@@ -1,0 +1,60 @@
+<div class="book-list-container">
+  <div class="header">
+    <h1>Books</h1>
+
+    <div class="custom-filter">
+      <label for="genreSelect">Filter by Genre:</label>
+      <select id="genreSelect" [(ngModel)]="selectedGenreId" (change)="filterBooks()">
+        <option [value]="0">All Genres</option>
+        <option *ngFor="let genre of genres()" [value]="genre.id">{{ genre.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else {
+    <div class="books-grid">
+      @for (book of pagedBooks; track book.id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ book.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="genre-badge">{{ book.genreName }}</p>
+            <p>{{ book.description }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <div class="book-info">
+              <span><strong>Author:</strong> {{ book.author }}</span>
+              <span><strong>Published:</strong> {{ book.publicationYear }}</span>
+              <span><strong>ISBN:</strong> {{ book.isbn }}</span>
+            </div>
+            <span class="spacer"></span>
+            <button mat-stroked-button color="primary" [routerLink]="['/books', book.id]">View Details</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    <div class="paging-controls">
+      <button mat-button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button mat-button (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+      <div class="custom-page-size">
+        <label for="pageSizeSelect">Page Size:</label>
+        <select id="pageSizeSelect" [(ngModel)]="pageSize" (change)="setPageSize($event)">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+
+    @if (filteredBooks().length === 0) {
+      <div class="text-center py-8">
+        <p>No books found for the selected criteria.</p>
+      </div>
+    }
+  }
+</div>
