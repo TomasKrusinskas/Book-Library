@@ -80,4 +80,13 @@ export class FavoritesComponent implements OnInit {
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString();
   }
+
+  onImageError(event: any): void {
+    // Hide the broken image and show placeholder
+    event.target.style.display = 'none';
+    const placeholder = event.target.parentElement.querySelector('.cover-placeholder');
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
 } 

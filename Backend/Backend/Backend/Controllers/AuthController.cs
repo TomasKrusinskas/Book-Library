@@ -4,6 +4,7 @@ using BookLibrary.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BookLibrary.Controllers
 {
@@ -23,6 +24,37 @@ namespace BookLibrary.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+        }
+
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetCurrentUserProfile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email ?? "",
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName ?? "",
+                Roles = roles.ToList(),
+                CreatedAt = user.CreatedAt,
+                IsActive = user.LockoutEnd == null || user.LockoutEnd < DateTimeOffset.UtcNow
+            };
+
+            return Ok(userDto);
         }
 
         [HttpGet("users")]

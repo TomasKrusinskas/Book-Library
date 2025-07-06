@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, RouterLink, Router} from '@angular/router';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../models/book.models';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { UserFavoriteService } from '../../services/user-favorite.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-book-details',
@@ -34,7 +35,9 @@ export class BookDetailsComponent implements OnInit {
     private location: Location, 
     private auth: AuthService,
     private userFavoriteService: UserFavoriteService,
-    private snackBar: MatSnackBar
+    private cartService: CartService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.isLoggedIn = this.auth.isLoggedIn;
   }
@@ -63,7 +66,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/books']);
   }
 
   setRating(rating: number) {
@@ -157,5 +160,21 @@ export class BookDetailsComponent implements OnInit {
         this.snackBar.open('Failed to remove from favorites', 'Close', { duration: 3000 });
       }
     });
+  }
+
+  addToCart(): void {
+    if (!this.book) return;
+    
+    this.cartService.addToCart(this.book);
+    this.snackBar.open(`"${this.book.title}" added to cart`, 'Close', { duration: 3000 });
+  }
+
+  onImageError(event: any): void {
+    // Hide the broken image and show placeholder
+    event.target.style.display = 'none';
+    const placeholder = event.target.parentElement.querySelector('.cover-placeholder');
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
   }
 }

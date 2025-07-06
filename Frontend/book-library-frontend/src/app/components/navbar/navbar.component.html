@@ -10,6 +10,18 @@
       <mat-icon>favorite</mat-icon>
       Favorites
     </button>
+    <button mat-button routerLink="/orders">
+      <mat-icon>receipt_long</mat-icon>
+      Orders
+    </button>
+    <button mat-button routerLink="/cart">
+      <mat-icon matBadge="{{ cartItemCount }}" matBadgeColor="accent">shopping_cart</mat-icon>
+      Cart
+    </button>
+    <button mat-button routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      Profile
+    </button>
   }
 
   @if (isAdmin()) {

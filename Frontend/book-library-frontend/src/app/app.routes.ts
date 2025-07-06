@@ -7,6 +7,11 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { BookDetailsComponent } from './components/book-details/book-details.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { CartComponent } from './components/cart/cart.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { OrdersComponent } from './components/orders/orders.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 export const routes: Routes = [
   { path: '', component: MainPageComponent },
@@ -16,6 +21,11 @@ export const routes: Routes = [
   { path: 'genres', component: GenreListComponent },
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'favorites', component: FavoritesComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'payment/:orderId', component: PaymentComponent },
   {
     path: 'admin',
     component: AdminDashboardComponent,

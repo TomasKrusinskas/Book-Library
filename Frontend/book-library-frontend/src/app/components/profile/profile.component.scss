@@ -1,0 +1,183 @@
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.profile-content {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  mat-card-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    margin: -16px -16px 16px -16px;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.3rem;
+      margin: 0;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    mat-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0.5rem 0 0 0;
+    }
+  }
+}
+
+.profile-info {
+  .info-row {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #ecf0f1;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #2c3e50;
+      min-width: 140px;
+      flex-shrink: 0;
+
+      mat-icon {
+        color: #3498db;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .info-value {
+      color: #34495e;
+      flex: 1;
+      margin-left: 1rem;
+
+      mat-chip {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+.edit-form {
+  .full-width {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  mat-form-field {
+    mat-icon {
+      color: #3498db;
+    }
+  }
+}
+
+mat-card-actions {
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  button {
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .profile-header {
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .profile-info {
+    .info-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      .info-label {
+        min-width: auto;
+      }
+
+      .info-value {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 0.5rem;
+  }
+
+  .profile-header {
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+  mat-card-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+} 

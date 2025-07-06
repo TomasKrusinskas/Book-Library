@@ -9,6 +9,8 @@ export interface Book {
   genreName: string;
   averageRating: number | null;
   summary: string;
+  photoUrl: string;
+  price: number;
   myRating?: number;
   isFavorite?: boolean;
 }
@@ -20,4 +22,7 @@ export interface CreateBookDto {
   description: string;
   publicationYear: number;
   genreId: number;
+  summary: string;
+  photoUrl: string;
+  price: number;
 }

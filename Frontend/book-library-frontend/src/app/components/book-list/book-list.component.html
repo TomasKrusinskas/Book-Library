@@ -4,7 +4,7 @@
     <div class="filters-row">
       <div class="custom-filter">
         <label for="genreSelect">Filter by Genre:</label>
-        <select id="genreSelect" [(ngModel)]="selectedGenreId" (change)="filterBooks()">
+        <select id="genreSelect" [(ngModel)]="selectedGenreId" (change)="onGenreChange()">
           <option [value]="0">All Genres</option>
           <option *ngFor="let genre of genres()" [value]="genre.id">{{ genre.name }}</option>
         </select>
@@ -36,11 +36,20 @@
     <div class="books-grid">
       @for (book of pagedBooks; track book.id) {
         <mat-card>
+          <div class="book-cover">
+            <img *ngIf="book.photoUrl" [src]="book.photoUrl" [alt]="book.title" class="cover-image" (error)="onImageError($event)">
+            <div *ngIf="!book.photoUrl" class="cover-placeholder">
+              <mat-icon>book</mat-icon>
+            </div>
+          </div>
           <mat-card-header>
             <mat-card-title>{{ book.title }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <p class="genre-badge">{{ book.genreName }}</p>
+            <div class="price-row">
+              <span class="price">${{ book.price.toFixed(2) }}</span>
+            </div>
             <div class="rating-row">
               <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRating">
                 <span class="stars">
@@ -64,6 +73,10 @@
             <span class="spacer"></span>
             <div class="book-actions">
               <button mat-stroked-button color="primary" [routerLink]="['/books', book.id]">View Details</button>
+              <button mat-raised-button color="accent" (click)="addToCart(book)">
+                <mat-icon>add_shopping_cart</mat-icon>
+                Add to Cart
+              </button>
             </div>
           </mat-card-actions>
         </mat-card>

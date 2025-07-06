@@ -41,6 +41,8 @@ namespace BookLibrary.Controllers
                 GenreId = b.GenreId,
                 GenreName = b.Genre?.Name ?? "",
                 Summary = b.Description?.Length > 120 ? b.Description.Substring(0, 120) + "..." : b.Description,
+                PhotoUrl = b.PhotoUrl,
+                Price = b.Price,
                 AverageRating = _bookRepository.GetAverageRating(b.Id)
             });
 
@@ -69,6 +71,8 @@ namespace BookLibrary.Controllers
                 GenreId = book.GenreId,
                 GenreName = book.Genre?.Name ?? "",
                 Summary = book.Description?.Length > 120 ? book.Description.Substring(0, 120) + "..." : book.Description,
+                PhotoUrl = book.PhotoUrl,
+                Price = book.Price,
                 AverageRating = _bookRepository.GetAverageRating(book.Id)
             });
         }
@@ -89,6 +93,8 @@ namespace BookLibrary.Controllers
                 GenreId = b.GenreId,
                 GenreName = b.Genre?.Name ?? "",
                 Summary = b.Description?.Length > 120 ? b.Description.Substring(0, 120) + "..." : b.Description,
+                PhotoUrl = b.PhotoUrl,
+                Price = b.Price,
                 AverageRating = _bookRepository.GetAverageRating(b.Id)
             });
 
@@ -107,6 +113,7 @@ namespace BookLibrary.Controllers
                 Description = createBookDto.Description,
                 PublicationYear = createBookDto.PublicationYear,
                 GenreId = createBookDto.GenreId,
+                Price = createBookDto.Price,
                 // Add Summary if needed
                 // Summary = createBookDto.Summary
             };
@@ -125,6 +132,8 @@ namespace BookLibrary.Controllers
                 GenreId = book.GenreId,
                 GenreName = book.Genre?.Name ?? "",
                 Summary = book.Description?.Length > 120 ? book.Description.Substring(0, 120) + "..." : book.Description,
+                PhotoUrl = book.PhotoUrl,
+                Price = book.Price,
                 AverageRating = 0
             });
         }
@@ -145,6 +154,7 @@ namespace BookLibrary.Controllers
             book.Description = updateBookDto.Description;
             book.PublicationYear = updateBookDto.PublicationYear;
             book.GenreId = updateBookDto.GenreId;
+            book.Price = updateBookDto.Price;
             // book.Summary = updateBookDto.Summary;
 
             _bookRepository.Update(book);
@@ -197,6 +207,7 @@ namespace BookLibrary.Controllers
                     CreatedAt = DateTime.UtcNow
                 });
             }
+
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -208,8 +219,13 @@ namespace BookLibrary.Controllers
             var userId = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return Unauthorized();
-            var rating = await _context.BookRatings.FirstOrDefaultAsync(r => r.BookId == id && r.UserId == userId);
-            return Ok(rating?.Rating);
+
+            var rating = await _context.BookRatings
+                .Where(r => r.BookId == id && r.UserId == userId)
+                .Select(r => r.Rating)
+                .FirstOrDefaultAsync();
+
+            return Ok(rating);
         }
     }
 }

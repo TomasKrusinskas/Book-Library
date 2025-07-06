@@ -9,12 +9,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../../services/book.service';
 import { GenreService } from '../../services/genre.service';
+import { CartService } from '../../services/cart.service';
 
 import { Book } from '../../models/book.models';
 import { Genre } from '../../models/genre.models';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatIcon} from '@angular/material/icon';
 
 
 @Component({
@@ -28,7 +30,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
     MatSelectModule,
     RouterModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIcon
   ],
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss']
@@ -38,7 +41,7 @@ export class BookListComponent implements OnInit {
   genres = signal<Genre[]>([]);
   filteredBooks = signal<Book[]>([]);
   loading = signal(true);
-  selectedGenreId = 0;
+  selectedGenreId: number = 0;
   pageSizeOptions = [5, 10, 20];
   pageSize = 5;
   currentPage = 1;
@@ -49,6 +52,7 @@ export class BookListComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private genreService: GenreService,
+    private cartService: CartService,
     private route: ActivatedRoute,
     private auth: AuthService,
     private snackBar: MatSnackBar
@@ -88,23 +92,23 @@ export class BookListComponent implements OnInit {
   filterBooks(): void {
     this.currentPage = 1;
     let books = this.books();
+    
+    // Convert selectedGenreId to number and handle genre filter
+    const selectedGenreIdNum = Number(this.selectedGenreId);
+    
     // Genre filter
-    if (this.selectedGenreId && this.selectedGenreId !== 0) {
-      const genreIdNum = Number(this.selectedGenreId);
+    if (selectedGenreIdNum !== 0) {
       books = books.filter(b => {
         const bookGenreId = Number(b.genreId);
-        const match = bookGenreId === genreIdNum;
-        if (!match) {
-          // Debug log for mismatches
-          console.debug('Genre filter mismatch:', {bookTitle: b.title, bookGenreId, selectedGenreId: genreIdNum});
-        }
-        return match;
+        return bookGenreId === selectedGenreIdNum;
       });
     }
+    
     // Rated filter
     if (this.showRatedOnly) {
       books = books.filter(b => b.averageRating && b.averageRating > 0);
     }
+    
     // Sorting
     switch (this.sortOption) {
       case 'highest':
@@ -120,6 +124,7 @@ export class BookListComponent implements OnInit {
         books = books.slice().sort((a, b) => b.publicationYear - a.publicationYear);
         break;
     }
+    
     this.filteredBooks.set(books);
   }
 
@@ -156,5 +161,23 @@ export class BookListComponent implements OnInit {
     return Array(5 - Math.round(rating)).fill(0);
   }
 
+  onImageError(event: any): void {
+    // Hide the broken image and show placeholder
+    event.target.style.display = 'none';
+    const placeholder = event.target.parentElement.querySelector('.cover-placeholder');
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
 
+  addToCart(book: Book): void {
+    this.cartService.addToCart(book);
+    this.snackBar.open(`${book.title} added to cart`, 'Close', { duration: 2000 });
+  }
+
+  onGenreChange(): void {
+    // Ensure selectedGenreId is converted to number
+    this.selectedGenreId = Number(this.selectedGenreId);
+    this.filterBooks();
+  }
 }

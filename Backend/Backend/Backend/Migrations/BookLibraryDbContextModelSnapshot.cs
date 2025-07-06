@@ -121,6 +121,13 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("PublicationYear")
                         .HasColumnType("int");
 
@@ -136,7 +143,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
 
                     b.HasData(
                         new
@@ -146,6 +153,8 @@ namespace Backend.Migrations
                             Description = "Dystopian novel",
                             GenreId = 1,
                             ISBN = "978-0452284234",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/7222246-L.jpg",
+                            Price = 12.99m,
                             PublicationYear = 1949,
                             Summary = "",
                             Title = "1984"
@@ -157,6 +166,8 @@ namespace Backend.Migrations
                             Description = "Fantasy adventure",
                             GenreId = 4,
                             ISBN = "978-0547928227",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/6979861-L.jpg",
+                            Price = 15.99m,
                             PublicationYear = 1937,
                             Summary = "",
                             Title = "The Hobbit"
@@ -168,6 +179,8 @@ namespace Backend.Migrations
                             Description = "Cosmology explained for the general public",
                             GenreId = 2,
                             ISBN = "978-0553380163",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/240726-L.jpg",
+                            Price = 18.99m,
                             PublicationYear = 1988,
                             Summary = "",
                             Title = "A Brief History of Time"
@@ -179,6 +192,8 @@ namespace Backend.Migrations
                             Description = "Survival on Mars",
                             GenreId = 3,
                             ISBN = "978-0553418026",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8375046-L.jpg",
+                            Price = 14.99m,
                             PublicationYear = 2011,
                             Summary = "",
                             Title = "The Martian"
@@ -190,6 +205,8 @@ namespace Backend.Migrations
                             Description = "Mystery thriller novel",
                             GenreId = 5,
                             ISBN = "978-0307474278",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/295577-L.jpg",
+                            Price = 13.99m,
                             PublicationYear = 2003,
                             Summary = "",
                             Title = "The Da Vinci Code"
@@ -201,6 +218,8 @@ namespace Backend.Migrations
                             Description = "Classic of modern American literature",
                             GenreId = 1,
                             ISBN = "978-0060935467",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8228691-L.jpg",
+                            Price = 11.99m,
                             PublicationYear = 1960,
                             Summary = "",
                             Title = "To Kill a Mockingbird"
@@ -212,6 +231,8 @@ namespace Backend.Migrations
                             Description = "History of humankind",
                             GenreId = 2,
                             ISBN = "978-0062316097",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8167896-L.jpg",
+                            Price = 16.99m,
                             PublicationYear = 2011,
                             Summary = "",
                             Title = "Sapiens: A Brief History of Humankind"
@@ -223,6 +244,8 @@ namespace Backend.Migrations
                             Description = "Epic science fiction novel",
                             GenreId = 3,
                             ISBN = "978-0441172719",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8101356-L.jpg",
+                            Price = 17.99m,
                             PublicationYear = 1965,
                             Summary = "",
                             Title = "Dune"
@@ -234,6 +257,8 @@ namespace Backend.Migrations
                             Description = "First book in the Harry Potter series",
                             GenreId = 4,
                             ISBN = "978-0590353427",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/7984916-L.jpg",
+                            Price = 19.99m,
                             PublicationYear = 1997,
                             Summary = "",
                             Title = "Harry Potter and the Sorcerer's Stone"
@@ -245,6 +270,8 @@ namespace Backend.Migrations
                             Description = "Psychological thriller and mystery",
                             GenreId = 5,
                             ISBN = "978-0307588371",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231856-L.jpg",
+                            Price = 14.99m,
                             PublicationYear = 2012,
                             Summary = "",
                             Title = "Gone Girl"
@@ -256,6 +283,8 @@ namespace Backend.Migrations
                             Description = "Biography of Steve Jobs",
                             GenreId = 6,
                             ISBN = "978-1451648539",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/7279251-L.jpg",
+                            Price = 20.99m,
                             PublicationYear = 2011,
                             Summary = "",
                             Title = "Steve Jobs"
@@ -267,6 +296,8 @@ namespace Backend.Migrations
                             Description = "Diary of Anne Frank during WWII",
                             GenreId = 7,
                             ISBN = "978-0553296983",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8225631-L.jpg",
+                            Price = 12.99m,
                             PublicationYear = 1947,
                             Summary = "",
                             Title = "The Diary of a Young Girl"
@@ -278,6 +309,8 @@ namespace Backend.Migrations
                             Description = "Horror novel about a shapeshifting entity",
                             GenreId = 8,
                             ISBN = "978-1501142970",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231996-L.jpg",
+                            Price = 18.99m,
                             PublicationYear = 1986,
                             Summary = "",
                             Title = "It"
@@ -289,6 +322,8 @@ namespace Backend.Migrations
                             Description = "Classic romance novel",
                             GenreId = 9,
                             ISBN = "978-1503290563",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8226191-L.jpg",
+                            Price = 10.99m,
                             PublicationYear = 1813,
                             Summary = "",
                             Title = "Pride and Prejudice"
@@ -300,6 +335,8 @@ namespace Backend.Migrations
                             Description = "Self-help classic",
                             GenreId = 10,
                             ISBN = "978-0743269513",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/240726-S.jpg",
+                            Price = 22.99m,
                             PublicationYear = 1989,
                             Summary = "",
                             Title = "The 7 Habits of Highly Effective People"
@@ -311,6 +348,8 @@ namespace Backend.Migrations
                             Description = "Dystopian science fiction",
                             GenreId = 1,
                             ISBN = "978-0060850524",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8775116-L.jpg",
+                            Price = 13.99m,
                             PublicationYear = 1932,
                             Summary = "",
                             Title = "Brave New World"
@@ -322,6 +361,8 @@ namespace Backend.Migrations
                             Description = "Memoir of a woman who leaves her survivalist family",
                             GenreId = 6,
                             ISBN = "978-0399590504",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254156-L.jpg",
+                            Price = 16.99m,
                             PublicationYear = 2018,
                             Summary = "",
                             Title = "Educated"
@@ -333,6 +374,8 @@ namespace Backend.Migrations
                             Description = "History of the start of WWI",
                             GenreId = 7,
                             ISBN = "978-0345476098",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/240726-M.jpg",
+                            Price = 19.99m,
                             PublicationYear = 1962,
                             Summary = "",
                             Title = "The Guns of August"
@@ -344,6 +387,8 @@ namespace Backend.Migrations
                             Description = "Classic horror novel",
                             GenreId = 8,
                             ISBN = "978-0486411095",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231851-L.jpg",
+                            Price = 11.99m,
                             PublicationYear = 1897,
                             Summary = "",
                             Title = "Dracula"
@@ -355,6 +400,8 @@ namespace Backend.Migrations
                             Description = "Romantic drama novel",
                             GenreId = 9,
                             ISBN = "978-0143124542",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231852-L.jpg",
+                            Price = 14.99m,
                             PublicationYear = 2012,
                             Summary = "",
                             Title = "Me Before You"
@@ -366,6 +413,8 @@ namespace Backend.Migrations
                             Description = "Guide to building good habits",
                             GenreId = 10,
                             ISBN = "978-0735211292",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254157-L.jpg",
+                            Price = 24.99m,
                             PublicationYear = 2018,
                             Summary = "",
                             Title = "Atomic Habits"
@@ -377,6 +426,8 @@ namespace Backend.Migrations
                             Description = "Political satire",
                             GenreId = 1,
                             ISBN = "978-0451526342",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/7222246-M.jpg",
+                            Price = 9.99m,
                             PublicationYear = 1945,
                             Summary = "",
                             Title = "Animal Farm"
@@ -388,6 +439,8 @@ namespace Backend.Migrations
                             Description = "Memoir of the former First Lady",
                             GenreId = 6,
                             ISBN = "978-1524763138",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254158-L.jpg",
+                            Price = 25.99m,
                             PublicationYear = 2018,
                             Summary = "",
                             Title = "Becoming"
@@ -399,6 +452,8 @@ namespace Backend.Migrations
                             Description = "History of Rome",
                             GenreId = 7,
                             ISBN = "978-1631492228",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254159-L.jpg",
+                            Price = 28.99m,
                             PublicationYear = 2015,
                             Summary = "",
                             Title = "SPQR: A History of Ancient Rome"
@@ -410,6 +465,8 @@ namespace Backend.Migrations
                             Description = "Horror at a haunted hotel",
                             GenreId = 8,
                             ISBN = "978-0307743657",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231997-L.jpg",
+                            Price = 17.99m,
                             PublicationYear = 1977,
                             Summary = "",
                             Title = "The Shining"
@@ -421,6 +478,8 @@ namespace Backend.Migrations
                             Description = "Romantic drama",
                             GenreId = 9,
                             ISBN = "978-0446605236",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231853-L.jpg",
+                            Price = 13.99m,
                             PublicationYear = 1996,
                             Summary = "",
                             Title = "The Notebook"
@@ -432,6 +491,8 @@ namespace Backend.Migrations
                             Description = "Psychological memoir",
                             GenreId = 10,
                             ISBN = "978-0807014295",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254160-L.jpg",
+                            Price = 15.99m,
                             PublicationYear = 1946,
                             Summary = "",
                             Title = "Man's Search for Meaning"
@@ -443,6 +504,8 @@ namespace Backend.Migrations
                             Description = "Dystopian novel about book burning",
                             GenreId = 1,
                             ISBN = "978-1451673319",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254161-L.jpg",
+                            Price = 12.99m,
                             PublicationYear = 1953,
                             Summary = "",
                             Title = "Fahrenheit 451"
@@ -454,6 +517,8 @@ namespace Backend.Migrations
                             Description = "Autobiography of Nelson Mandela",
                             GenreId = 6,
                             ISBN = "978-0316548182",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254162-L.jpg",
+                            Price = 21.99m,
                             PublicationYear = 1994,
                             Summary = "",
                             Title = "Long Walk to Freedom"
@@ -465,6 +530,8 @@ namespace Backend.Migrations
                             Description = "Biography of the Wright brothers",
                             GenreId = 7,
                             ISBN = "978-1476728759",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254163-L.jpg",
+                            Price = 23.99m,
                             PublicationYear = 2015,
                             Summary = "",
                             Title = "The Wright Brothers"
@@ -476,6 +543,8 @@ namespace Backend.Migrations
                             Description = "Classic haunted house horror",
                             GenreId = 8,
                             ISBN = "978-0143039983",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231998-L.jpg",
+                            Price = 14.99m,
                             PublicationYear = 1959,
                             Summary = "",
                             Title = "The Haunting of Hill House"
@@ -487,6 +556,8 @@ namespace Backend.Migrations
                             Description = "Time-travel romance",
                             GenreId = 9,
                             ISBN = "978-0440212560",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231854-L.jpg",
+                            Price = 18.99m,
                             PublicationYear = 1991,
                             Summary = "",
                             Title = "Outlander"
@@ -498,6 +569,8 @@ namespace Backend.Migrations
                             Description = "Spiritual self-help book",
                             GenreId = 10,
                             ISBN = "978-1577314806",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254164-L.jpg",
+                            Price = 20.99m,
                             PublicationYear = 1997,
                             Summary = "",
                             Title = "The Power of Now"
@@ -509,6 +582,8 @@ namespace Backend.Migrations
                             Description = "Novel about boys stranded on an island",
                             GenreId = 1,
                             ISBN = "978-0399501487",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8228692-L.jpg",
+                            Price = 11.99m,
                             PublicationYear = 1954,
                             Summary = "",
                             Title = "Lord of the Flies"
@@ -520,6 +595,8 @@ namespace Backend.Migrations
                             Description = "Biography of Alexander Hamilton",
                             GenreId = 6,
                             ISBN = "978-0143034759",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254165-L.jpg",
+                            Price = 26.99m,
                             PublicationYear = 2004,
                             Summary = "",
                             Title = "Alexander Hamilton"
@@ -531,6 +608,8 @@ namespace Backend.Migrations
                             Description = "History of Abraham Lincoln's cabinet",
                             GenreId = 7,
                             ISBN = "978-0743270755",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254166-L.jpg",
+                            Price = 27.99m,
                             PublicationYear = 2005,
                             Summary = "",
                             Title = "Team of Rivals"
@@ -542,6 +621,8 @@ namespace Backend.Migrations
                             Description = "Horror novel about demonic possession",
                             GenreId = 8,
                             ISBN = "978-0061007224",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231999-L.jpg",
+                            Price = 16.99m,
                             PublicationYear = 1971,
                             Summary = "",
                             Title = "The Exorcist"
@@ -553,6 +634,8 @@ namespace Backend.Migrations
                             Description = "Young adult romance",
                             GenreId = 9,
                             ISBN = "978-0142424179",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8231855-L.jpg",
+                            Price = 15.99m,
                             PublicationYear = 2012,
                             Summary = "",
                             Title = "The Fault in Our Stars"
@@ -564,6 +647,8 @@ namespace Backend.Migrations
                             Description = "Self-help on growth mindset",
                             GenreId = 10,
                             ISBN = "978-0345472328",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254167-L.jpg",
+                            Price = 19.99m,
                             PublicationYear = 2006,
                             Summary = "",
                             Title = "Mindset: The New Psychology of Success"
@@ -575,6 +660,8 @@ namespace Backend.Migrations
                             Description = "Classic coming-of-age novel",
                             GenreId = 1,
                             ISBN = "978-0316769488",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8228693-L.jpg",
+                            Price = 12.99m,
                             PublicationYear = 1951,
                             Summary = "",
                             Title = "The Catcher in the Rye"
@@ -586,6 +673,8 @@ namespace Backend.Migrations
                             Description = "Biography of Albert Einstein",
                             GenreId = 6,
                             ISBN = "978-0743264730",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254168-L.jpg",
+                            Price = 24.99m,
                             PublicationYear = 2007,
                             Summary = "",
                             Title = "Einstein: His Life and Universe"
@@ -597,6 +686,8 @@ namespace Backend.Migrations
                             Description = "History of societies",
                             GenreId = 7,
                             ISBN = "978-0393317558",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254169-L.jpg",
+                            Price = 21.99m,
                             PublicationYear = 1997,
                             Summary = "",
                             Title = "Guns, Germs, and Steel"
@@ -608,6 +699,8 @@ namespace Backend.Migrations
                             Description = "Horror about a cursed burial ground",
                             GenreId = 8,
                             ISBN = "978-1501156700",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/8232000-L.jpg",
+                            Price = 17.99m,
                             PublicationYear = 1983,
                             Summary = "",
                             Title = "Pet Sematary"
@@ -619,6 +712,8 @@ namespace Backend.Migrations
                             Description = "Contemporary romance",
                             GenreId = 9,
                             ISBN = "978-0399587665",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254170-L.jpg",
+                            Price = 14.99m,
                             PublicationYear = 2018,
                             Summary = "",
                             Title = "The Wedding Date"
@@ -630,6 +725,8 @@ namespace Backend.Migrations
                             Description = "Self-help on living a good life",
                             GenreId = 10,
                             ISBN = "978-0062457714",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254171-L.jpg",
+                            Price = 18.99m,
                             PublicationYear = 2016,
                             Summary = "",
                             Title = "The Subtle Art of Not Giving a F*ck"
@@ -641,6 +738,8 @@ namespace Backend.Migrations
                             Description = "Classic American novel",
                             GenreId = 1,
                             ISBN = "978-0743273565",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/7222276-L.jpg",
+                            Price = 10.99m,
                             PublicationYear = 1925,
                             Summary = "",
                             Title = "The Great Gatsby"
@@ -652,6 +751,8 @@ namespace Backend.Migrations
                             Description = "Biography of a WWII hero",
                             GenreId = 6,
                             ISBN = "978-0812974492",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254172-L.jpg",
+                            Price = 22.99m,
                             PublicationYear = 2010,
                             Summary = "",
                             Title = "Unbroken"
@@ -663,6 +764,8 @@ namespace Backend.Migrations
                             Description = "Biography and science history",
                             GenreId = 7,
                             ISBN = "978-1400052189",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254173-L.jpg",
+                            Price = 20.99m,
                             PublicationYear = 2010,
                             Summary = "",
                             Title = "The Immortal Life of Henrietta Lacks"
@@ -674,6 +777,8 @@ namespace Backend.Migrations
                             Description = "Post-apocalyptic horror",
                             GenreId = 8,
                             ISBN = "978-0062259653",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254174-L.jpg",
+                            Price = 15.99m,
                             PublicationYear = 2014,
                             Summary = "",
                             Title = "Bird Box"
@@ -685,6 +790,8 @@ namespace Backend.Migrations
                             Description = "Romantic comedy novel",
                             GenreId = 9,
                             ISBN = "978-1250316776",
+                            PhotoUrl = "https://covers.openlibrary.org/b/id/9254175-L.jpg",
+                            Price = 16.99m,
                             PublicationYear = 2019,
                             Summary = "",
                             Title = "Red, White & Royal Blue"
@@ -719,7 +826,7 @@ namespace Backend.Migrations
                     b.HasIndex("BookId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("BookRatings");
+                    b.ToTable("BookRatings", (string)null);
                 });
 
             modelBuilder.Entity("BookLibrary.Data.Entities.Genre", b =>
@@ -740,7 +847,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
 
                     b.HasData(
                         new
@@ -805,6 +912,73 @@ namespace Backend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BookLibrary.Data.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("BookLibrary.Data.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems", (string)null);
+                });
+
             modelBuilder.Entity("BookLibrary.Data.Entities.UserFavorite", b =>
                 {
                     b.Property<int>("Id")
@@ -830,7 +1004,7 @@ namespace Backend.Migrations
                     b.HasIndex("BookId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("UserFavorites");
+                    b.ToTable("UserFavorites", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1010,6 +1184,36 @@ namespace Backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BookLibrary.Data.Entities.Order", b =>
+                {
+                    b.HasOne("BookLibrary.Auth.Model.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BookLibrary.Data.Entities.OrderItem", b =>
+                {
+                    b.HasOne("BookLibrary.Data.Entities.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookLibrary.Data.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("BookLibrary.Data.Entities.UserFavorite", b =>
                 {
                     b.HasOne("BookLibrary.Data.Entities.Book", "Book")
@@ -1088,6 +1292,11 @@ namespace Backend.Migrations
             modelBuilder.Entity("BookLibrary.Data.Entities.Genre", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("BookLibrary.Data.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

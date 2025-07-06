@@ -23,6 +23,12 @@
     <div class="favorites-grid">
       @for (favorite of favorites(); track favorite.id) {
         <mat-card class="book-card">
+          <div class="book-cover">
+            <img *ngIf="favorite.book.photoUrl" [src]="favorite.book.photoUrl" [alt]="favorite.book.title" class="cover-image" (error)="onImageError($event)">
+            <div *ngIf="!favorite.book.photoUrl" class="cover-placeholder">
+              <mat-icon>book</mat-icon>
+            </div>
+          </div>
           <mat-card-header>
             <mat-card-title>{{ favorite.book.title }}</mat-card-title>
             <mat-card-subtitle>{{ favorite.book.author }}</mat-card-subtitle>

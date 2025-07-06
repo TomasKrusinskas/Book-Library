@@ -53,6 +53,7 @@ namespace BookLibrary.Controllers
                         PublicationYear = uf.Book.PublicationYear,
                         GenreId = uf.Book.GenreId,
                         GenreName = uf.Book.Genre.Name,
+                        PhotoUrl = uf.Book.PhotoUrl,
                         AverageRating = uf.Book.BookRatings.Any() ? uf.Book.BookRatings.Average(br => br.Rating) : null
                     }
                 })
@@ -117,6 +118,7 @@ namespace BookLibrary.Controllers
                         PublicationYear = uf.Book.PublicationYear,
                         GenreId = uf.Book.GenreId,
                         GenreName = uf.Book.Genre.Name,
+                        PhotoUrl = uf.Book.PhotoUrl,
                         AverageRating = uf.Book.BookRatings.Any() ? uf.Book.BookRatings.Average(br => br.Rating) : null
                     }
                 })

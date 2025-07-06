@@ -22,5 +22,11 @@ namespace BookLibrary.DTOs
         public int GenreId { get; set; }
 
         public string Summary { get; set; } = string.Empty;
+        
+        public string PhotoUrl { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0")]
+        public decimal Price { get; set; }
     }
 }

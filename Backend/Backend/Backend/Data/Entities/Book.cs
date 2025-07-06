@@ -13,6 +13,8 @@ namespace BookLibrary.Data.Entities
         public int GenreId { get; set; }
         public Genre Genre { get; set; } = null!;
         public string Summary { get; set; } = string.Empty;
+        public string PhotoUrl { get; set; } = string.Empty;
+        public decimal Price { get; set; }
         public ICollection<BookRating> BookRatings { get; set; } = new List<BookRating>();
     }
 }

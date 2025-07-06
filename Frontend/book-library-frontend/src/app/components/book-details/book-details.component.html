@@ -9,59 +9,134 @@
   </ng-container>
   <ng-template #loaded>
     <ng-container *ngIf="!notFound && book; else notFoundBlock">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            {{ book.title }}
-            <button *ngIf="isLoggedIn" 
-                    mat-icon-button 
-                    class="favorite-btn"
-                    (click)="toggleFavorite()"
-                    [attr.aria-label]="book.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
-              <mat-icon [class.favorite]="book.isFavorite">
-                {{ book.isFavorite ? 'favorite' : 'favorite_border' }}
-              </mat-icon>
-            </button>
-          </mat-card-title>
-          <mat-card-subtitle>by {{ book.author }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="genre-badge">{{ book.genreName || 'Unknown Genre' }}</p>
-          <div class="book-meta">
-            <span><strong>Year:</strong> {{ book.publicationYear }}</span>
-            <span><strong>ISBN:</strong> {{ book.isbn }}</span>
+      <div class="book-details-layout">
+        <!-- Book Cover Section -->
+        <div class="book-cover-section">
+          <div class="book-cover">
+            <img *ngIf="book.photoUrl" [src]="book.photoUrl" [alt]="book.title" class="cover-image" (error)="onImageError($event)">
+            <div *ngIf="!book.photoUrl" class="cover-placeholder">
+              <mat-icon class="book-icon">book</mat-icon>
+            </div>
+            <div class="cover-overlay">
+              <button *ngIf="isLoggedIn" 
+                      mat-icon-button 
+                      class="favorite-btn-cover"
+                      (click)="toggleFavorite()"
+                      [attr.aria-label]="book.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+                <mat-icon [class.favorite]="book.isFavorite">
+                  {{ book.isFavorite ? 'favorite' : 'favorite_border' }}
+                </mat-icon>
+              </button>
+            </div>
           </div>
-          <div class="rating-row">
-            <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRating">
-              <span class="stars">
-                <ng-container *ngFor="let _ of getStarsArray(book.averageRating)">★</ng-container>
-                <span class="empty-stars"><ng-container *ngFor="let _ of getEmptyStarsArray(book.averageRating)">☆</ng-container></span>
-              </span>
-              <span class="avg-rating">{{ book.averageRating.toFixed(2) }}/5</span>
-            </ng-container>
-            <ng-template #noRating>
-              <span class="no-rating">No ratings yet</span>
-            </ng-template>
-          </div>
-          <div *ngIf="isLoggedIn" class="user-rating-row">
-            <span>Your rating:</span>
-            <ng-container *ngFor="let star of [1,2,3,4,5]">
-              <span class="star"
-                    [class.filled]="isStarFilled(star)"
-                    [class.editable]="!ratingSubmitting"
-                    (mouseenter)="setHover(star)"
-                    (mouseleave)="clearHover()"
-                    (click)="!ratingSubmitting && setRating(star)"
-                    [attr.aria-label]="'Rate ' + star + ' stars'">
-                ★
-              </span>
-            </ng-container>
-            <span *ngIf="myRating === null">(not rated)</span>
-            <span *ngIf="ratingSubmitting" class="submitting">Saving...</span>
-          </div>
-          <p class="description">{{ book.description }}</p>
-        </mat-card-content>
-      </mat-card>
+        </div>
+
+        <!-- Book Information Section -->
+        <div class="book-info-section">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title class="book-title">{{ book.title }}</mat-card-title>
+              <mat-card-subtitle class="book-author">by {{ book.author }}</mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <!-- Genre Badge -->
+              <div class="genre-section">
+                <p class="genre-badge">{{ book.genreName || 'Unknown Genre' }}</p>
+              </div>
+
+              <!-- Price Section -->
+              <div class="price-section">
+                <h3 class="price">${{ book.price.toFixed(2) }}</h3>
+              </div>
+
+              <!-- Book Metadata -->
+              <div class="metadata-section">
+                <h3>Book Details</h3>
+                <div class="metadata-grid">
+                  <div class="metadata-item">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span><strong>Publication Year:</strong> {{ book.publicationYear }}</span>
+                  </div>
+                  <div class="metadata-item">
+                    <mat-icon>qr_code</mat-icon>
+                    <span><strong>ISBN:</strong> {{ book.isbn }}</span>
+                  </div>
+                  <div class="metadata-item">
+                    <mat-icon>category</mat-icon>
+                    <span><strong>Genre:</strong> {{ book.genreName || 'Unknown' }}</span>
+                  </div>
+                  <div class="metadata-item">
+                    <mat-icon>star</mat-icon>
+                    <span><strong>Average Rating:</strong> 
+                      <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRating">
+                        {{ book.averageRating.toFixed(2) }}/5
+                      </ng-container>
+                      <ng-template #noRating>Not rated yet</ng-template>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rating Section -->
+              <div class="rating-section">
+                <h3>Community Rating</h3>
+                <div class="rating-row">
+                  <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRatingStars">
+                    <span class="stars">
+                      <ng-container *ngFor="let _ of getStarsArray(book.averageRating)">★</ng-container>
+                      <span class="empty-stars"><ng-container *ngFor="let _ of getEmptyStarsArray(book.averageRating)">☆</ng-container></span>
+                    </span>
+                    <span class="avg-rating">{{ book.averageRating.toFixed(2) }}/5</span>
+                  </ng-container>
+                  <ng-template #noRatingStars>
+                    <span class="no-rating">No ratings yet</span>
+                  </ng-template>
+                </div>
+              </div>
+
+              <!-- User Rating Section -->
+              <div *ngIf="isLoggedIn" class="user-rating-section">
+                <h3>Your Rating</h3>
+                <div class="user-rating-row">
+                  <span class="rating-label">Rate this book:</span>
+                  <ng-container *ngFor="let star of [1,2,3,4,5]">
+                    <span class="star"
+                          [class.filled]="isStarFilled(star)"
+                          [class.editable]="!ratingSubmitting"
+                          (mouseenter)="setHover(star)"
+                          (mouseleave)="clearHover()"
+                          (click)="!ratingSubmitting && setRating(star)"
+                          [attr.aria-label]="'Rate ' + star + ' stars'">
+                      ★
+                    </span>
+                  </ng-container>
+                  <span *ngIf="myRating === null" class="not-rated">(not rated)</span>
+                  <span *ngIf="ratingSubmitting" class="submitting">Saving...</span>
+                </div>
+              </div>
+
+              <!-- Description Section -->
+              <div class="description-section">
+                <h3>About This Book</h3>
+                <p class="description">{{ book.description || 'No description available.' }}</p>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button mat-raised-button color="accent" class="add-to-cart-btn" (click)="addToCart()">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  Add to Cart
+                </button>
+                <button mat-stroked-button color="primary" class="back-to-books-btn" (click)="goBack()">
+                  <mat-icon>arrow_back</mat-icon>
+                  Back to Books
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </ng-container>
     <ng-template #notFoundBlock>
       <div class="not-found">

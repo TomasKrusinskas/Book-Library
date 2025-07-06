@@ -1,0 +1,91 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h1>Shopping Cart</h1>
+    <button mat-icon-button (click)="clearCart()" [disabled]="cartItems.length === 0">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+  </div>
+
+  <div class="cart-content" *ngIf="cartItems.length > 0; else emptyCart">
+    <div class="cart-items">
+      <mat-card class="cart-item" *ngFor="let item of cartItems">
+        <div class="item-content">
+          <div class="item-image">
+            <img [src]="item.book.photoUrl" [alt]="item.book.title" 
+                 (error)="onImageError($event)">
+          </div>
+          
+          <div class="item-details">
+            <h3>{{ item.book.title }}</h3>
+            <p class="author">by {{ item.book.author }}</p>
+            <p class="price">${{ item.book.price.toFixed(2) }}</p>
+          </div>
+
+          <div class="item-quantity">
+            <mat-form-field appearance="outline">
+              <input matInput type="number" 
+                     [value]="item.quantity" 
+                     min="1" 
+                     (change)="onQuantityChange(item.book.id, $event)">
+            </mat-form-field>
+          </div>
+
+          <div class="item-total">
+            <p class="total-price">${{ getItemTotal(item).toFixed(2) }}</p>
+          </div>
+
+          <div class="item-actions">
+            <button mat-icon-button color="warn" (click)="removeItem(item.book.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="cart-summary">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Order Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="summary-row">
+            <span>Items ({{ cartItems.length }}):</span>
+            <span>${{ total.toFixed(2) }}</span>
+          </div>
+          <div class="summary-row total">
+            <span><strong>Total:</strong></span>
+            <span><strong>${{ total.toFixed(2) }}</strong></span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" 
+                  (click)="proceedToCheckout()" 
+                  class="checkout-btn">
+            Proceed to Checkout
+          </button>
+          <button mat-stroked-button (click)="continueShopping()">
+            Continue Shopping
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <div class="empty-cart">
+      <mat-card>
+        <mat-card-content>
+          <div class="empty-cart-content">
+            <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any books to your cart yet.</p>
+            <button mat-raised-button color="primary" (click)="continueShopping()">
+              Start Shopping
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-template>
+</div> 
