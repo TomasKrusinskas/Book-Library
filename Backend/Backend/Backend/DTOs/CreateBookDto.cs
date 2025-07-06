@@ -20,5 +20,7 @@ namespace BookLibrary.DTOs
 
         [Required]
         public int GenreId { get; set; }
+
+        public string Summary { get; set; } = string.Empty;
     }
 }

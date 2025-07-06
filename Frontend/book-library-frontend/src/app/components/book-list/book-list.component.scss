@@ -198,6 +198,15 @@ button[mat-stroked-button] {
   color: #4b5563;
 }
 
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 @media (max-width: 600px) {
   .book-list-container {
     padding: 10px 2px;

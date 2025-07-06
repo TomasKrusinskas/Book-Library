@@ -11,7 +11,18 @@
     <ng-container *ngIf="!notFound && book; else notFoundBlock">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>{{ book.title }}</mat-card-title>
+          <mat-card-title>
+            {{ book.title }}
+            <button *ngIf="isLoggedIn" 
+                    mat-icon-button 
+                    class="favorite-btn"
+                    (click)="toggleFavorite()"
+                    [attr.aria-label]="book.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+              <mat-icon [class.favorite]="book.isFavorite">
+                {{ book.isFavorite ? 'favorite' : 'favorite_border' }}
+              </mat-icon>
+            </button>
+          </mat-card-title>
           <mat-card-subtitle>by {{ book.author }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
@@ -19,6 +30,34 @@
           <div class="book-meta">
             <span><strong>Year:</strong> {{ book.publicationYear }}</span>
             <span><strong>ISBN:</strong> {{ book.isbn }}</span>
+          </div>
+          <div class="rating-row">
+            <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRating">
+              <span class="stars">
+                <ng-container *ngFor="let _ of getStarsArray(book.averageRating)">★</ng-container>
+                <span class="empty-stars"><ng-container *ngFor="let _ of getEmptyStarsArray(book.averageRating)">☆</ng-container></span>
+              </span>
+              <span class="avg-rating">{{ book.averageRating.toFixed(2) }}/5</span>
+            </ng-container>
+            <ng-template #noRating>
+              <span class="no-rating">No ratings yet</span>
+            </ng-template>
+          </div>
+          <div *ngIf="isLoggedIn" class="user-rating-row">
+            <span>Your rating:</span>
+            <ng-container *ngFor="let star of [1,2,3,4,5]">
+              <span class="star"
+                    [class.filled]="isStarFilled(star)"
+                    [class.editable]="!ratingSubmitting"
+                    (mouseenter)="setHover(star)"
+                    (mouseleave)="clearHover()"
+                    (click)="!ratingSubmitting && setRating(star)"
+                    [attr.aria-label]="'Rate ' + star + ' stars'">
+                ★
+              </span>
+            </ng-container>
+            <span *ngIf="myRating === null">(not rated)</span>
+            <span *ngIf="ratingSubmitting" class="submitting">Saving...</span>
           </div>
           <p class="description">{{ book.description }}</p>
         </mat-card-content>

@@ -32,5 +32,12 @@ namespace BookLibrary.Repositories
                 .Include(b => b.Genre)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
+
+        public double GetAverageRating(int bookId)
+        {
+            var ratings = _context.BookRatings.Where(r => r.BookId == bookId);
+            if (!ratings.Any()) return 0;
+            return Math.Round(ratings.Average(r => r.Rating), 2);
+        }
     }
 }

@@ -3,6 +3,7 @@ using BookLibrary.DTOs.Auth;
 using BookLibrary.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookLibrary.Controllers
 {
@@ -22,6 +23,110 @@ namespace BookLibrary.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var userDtos = new List<UserDto>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userDtos.Add(new UserDto
+                {
+                    Id = user.Id,
+                    Email = user.Email ?? "",
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.UserName ?? "",
+                    Roles = roles.ToList(),
+                    CreatedAt = user.CreatedAt,
+                    IsActive = user.LockoutEnd == null || user.LockoutEnd < DateTimeOffset.UtcNow
+                });
+            }
+
+            return Ok(userDtos);
+        }
+
+        [HttpPut("users/{userId}/role")]
+        public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] UpdateUserRoleDto updateRoleDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Remove all current roles
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+            // Add new role
+            var result = await _userManager.AddToRoleAsync(user, updateRoleDto.Role);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { message = "User role updated successfully" });
+        }
+
+        [HttpPut("users/{userId}/deactivate")]
+        public async Task<IActionResult> DeactivateUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { message = "User deactivated successfully" });
+        }
+
+        [HttpPut("users/{userId}/activate")]
+        public async Task<IActionResult> ActivateUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.LockoutEnd = null;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { message = "User activated successfully" });
+        }
+
+        [HttpDelete("users/{userId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { message = "User deleted successfully" });
         }
 
         [HttpPost("register")]
@@ -62,6 +167,12 @@ namespace BookLibrary.Controllers
             if (user == null)
             {
                 return Unauthorized("Invalid credentials");
+            }
+
+            // Check if user is deactivated (locked out)
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.UtcNow)
+            {
+                return Unauthorized("Your account has been deactivated by an administrator. Please contact support for assistance.");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);

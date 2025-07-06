@@ -35,4 +35,12 @@ export class BookService {
   deleteBook(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  rateBook(bookId: number, rating: number) {
+    return this.http.post(`${this.apiUrl}/${bookId}/rate`, rating);
+  }
+
+  getMyRating(bookId: number) {
+    return this.http.get<number>(`${this.apiUrl}/${bookId}/my-rating`);
+  }
 }

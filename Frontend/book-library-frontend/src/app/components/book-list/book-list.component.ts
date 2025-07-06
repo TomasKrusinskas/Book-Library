@@ -9,9 +9,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../../services/book.service';
 import { GenreService } from '../../services/genre.service';
+
 import { Book } from '../../models/book.models';
 import { Genre } from '../../models/genre.models';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-book-list',
@@ -23,7 +27,8 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    RouterModule
+    RouterModule,
+    MatSnackBarModule
   ],
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss']
@@ -37,12 +42,19 @@ export class BookListComponent implements OnInit {
   pageSizeOptions = [5, 10, 20];
   pageSize = 5;
   currentPage = 1;
+  showRatedOnly = false;
+  sortOption: 'none' | 'highest' | 'lowest' | 'yearAsc' | 'yearDesc' = 'none';
+  isLoggedIn = false;
 
   constructor(
     private bookService: BookService,
     private genreService: GenreService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private auth: AuthService,
+    private snackBar: MatSnackBar
+  ) {
+    this.isLoggedIn = this.auth.isLoggedIn;
+  }
 
   ngOnInit(): void {
     // Check if a genre filter was passed in the URL
@@ -56,58 +68,59 @@ export class BookListComponent implements OnInit {
 
   loadData(): void {
     this.loading.set(true);
-
-    // Load genres first
     this.genreService.getGenres().subscribe({
       next: (genres) => this.genres.set(genres),
       error: (error) => console.error('Error loading genres:', error)
     });
-
-    // Load books based on selectedGenreId
-    if (this.selectedGenreId === 0) {
-      this.bookService.getBooks().subscribe({
-        next: (books) => {
-          this.books.set(books);
-          this.filteredBooks.set(books);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('Error loading books:', error);
-          this.loading.set(false);
-        }
-      });
-    } else {
-      this.bookService.getBooksByGenre(this.selectedGenreId).subscribe({
-        next: (books) => {
-          this.books.set(books);
-          this.filteredBooks.set(books);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('Error filtering books:', error);
-          this.loading.set(false);
-        }
-      });
-    }
+    this.bookService.getBooks().subscribe({
+      next: (books) => {
+        this.books.set(books);
+        this.loading.set(false);
+        this.filterBooks();
+      },
+      error: (error) => {
+        console.error('Error loading books:', error);
+        this.loading.set(false);
+      }
+    });
   }
 
   filterBooks(): void {
-    this.currentPage = 1; // Reset to first page when filtering
-    if (this.selectedGenreId === 0) {
-      this.filteredBooks.set(this.books());
-    } else {
-      this.loading.set(true);
-      this.bookService.getBooksByGenre(this.selectedGenreId).subscribe({
-        next: (books) => {
-          this.filteredBooks.set(books);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('Error filtering books:', error);
-          this.loading.set(false);
+    this.currentPage = 1;
+    let books = this.books();
+    // Genre filter
+    if (this.selectedGenreId && this.selectedGenreId !== 0) {
+      const genreIdNum = Number(this.selectedGenreId);
+      books = books.filter(b => {
+        const bookGenreId = Number(b.genreId);
+        const match = bookGenreId === genreIdNum;
+        if (!match) {
+          // Debug log for mismatches
+          console.debug('Genre filter mismatch:', {bookTitle: b.title, bookGenreId, selectedGenreId: genreIdNum});
         }
+        return match;
       });
     }
+    // Rated filter
+    if (this.showRatedOnly) {
+      books = books.filter(b => b.averageRating && b.averageRating > 0);
+    }
+    // Sorting
+    switch (this.sortOption) {
+      case 'highest':
+        books = books.slice().sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0));
+        break;
+      case 'lowest':
+        books = books.slice().sort((a, b) => (a.averageRating ?? 0) - (b.averageRating ?? 0));
+        break;
+      case 'yearAsc':
+        books = books.slice().sort((a, b) => a.publicationYear - b.publicationYear);
+        break;
+      case 'yearDesc':
+        books = books.slice().sort((a, b) => b.publicationYear - a.publicationYear);
+        break;
+    }
+    this.filteredBooks.set(books);
   }
 
   get pagedBooks() {
@@ -133,4 +146,15 @@ export class BookListComponent implements OnInit {
     }
     this.currentPage = 1;
   }
+
+  getStarsArray(rating: number | null): any[] {
+    if (!rating) return [];
+    return Array(Math.round(rating)).fill(0);
+  }
+  getEmptyStarsArray(rating: number | null): any[] {
+    if (!rating) return Array(5).fill(0);
+    return Array(5 - Math.round(rating)).fill(0);
+  }
+
+
 }

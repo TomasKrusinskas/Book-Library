@@ -6,6 +6,7 @@ import { GenreListComponent } from './components/genre-list/genre-list.component
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { BookDetailsComponent } from './components/book-details/book-details.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
 
 export const routes: Routes = [
   { path: '', component: MainPageComponent },
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'books', component: BookListComponent },
   { path: 'genres', component: GenreListComponent },
   { path: 'books/:id', component: BookDetailsComponent },
+  { path: 'favorites', component: FavoritesComponent },
   {
     path: 'admin',
     component: AdminDashboardComponent,

@@ -11,10 +11,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
 import { BookService } from '../../services/book.service';
 import { GenreService } from '../../services/genre.service';
+import { UserService } from '../../services/user.service';
 import { Book, CreateBookDto } from '../../models/book.models';
 import { Genre, CreateGenreDto } from '../../models/genre.models';
+import { User } from '../../models/user.models';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -31,7 +36,10 @@ import { Genre, CreateGenreDto } from '../../models/genre.models';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule,
+    MatChipsModule,
+    MatMenuModule
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
@@ -43,12 +51,15 @@ export class AdminDashboardComponent implements OnInit {
   // Signals for data
   books = signal<Book[]>([]);
   genres = signal<Genre[]>([]);
+  users = signal<User[]>([]);
   loadingBooks = signal(true);
   loadingGenres = signal(true);
+  loadingUsers = signal(true);
 
   // Table columns
   bookColumns = ['id', 'title', 'author', 'genre', 'year', 'actions'];
   genreColumns = ['id', 'name', 'description', 'actions'];
+  userColumns = ['id', 'name', 'email', 'roles', 'createdAt', 'actions'];
 
   // Forms
   bookForm: FormGroup;
@@ -58,10 +69,13 @@ export class AdminDashboardComponent implements OnInit {
   editingBook: Book | null = null;
   editingGenre: Genre | null = null;
 
+
+
   constructor(
     private fb: FormBuilder,
     private bookService: BookService,
     private genreService: GenreService,
+    private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
@@ -87,6 +101,7 @@ export class AdminDashboardComponent implements OnInit {
   loadData(): void {
     this.loadBooks();
     this.loadGenres();
+    this.loadUsers();
   }
 
   loadBooks(): void {
@@ -117,6 +132,93 @@ export class AdminDashboardComponent implements OnInit {
         this.loadingGenres.set(false);
       }
     });
+  }
+
+  loadUsers(): void {
+    this.loadingUsers.set(true);
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.users.set(users);
+        this.loadingUsers.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading users:', error);
+        this.snackBar.open('Failed to load users', 'Close', {duration: 3000});
+        this.loadingUsers.set(false);
+      }
+    });
+  }
+
+  getFullName(user: User): string {
+    return `${user.firstName} ${user.lastName}`.trim() || user.userName;
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString();
+  }
+
+  // Computed properties for user statistics
+  get totalUsers(): number {
+    return this.users().length;
+  }
+
+  get adminUsers(): number {
+    return this.users().filter(u => u.roles.includes('Admin')).length;
+  }
+
+  get regularUsers(): number {
+    return this.users().filter(u => u.roles.includes('User')).length;
+  }
+
+  // User management methods
+  changeUserRole(user: User, newRole: string): void {
+    if (confirm(`Are you sure you want to change ${this.getFullName(user)}'s role to ${newRole}?`)) {
+      this.userService.updateUserRole(user.id, newRole).subscribe({
+        next: () => {
+          this.snackBar.open('User role updated successfully', 'Close', {duration: 3000});
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.snackBar.open('Failed to update user role', 'Close', {duration: 3000});
+        }
+      });
+    }
+  }
+
+  toggleUserStatus(user: User): void {
+    const action = user.isActive ? 'deactivate' : 'activate';
+    const userName = this.getFullName(user);
+    
+    if (confirm(`Are you sure you want to ${action} ${userName}?`)) {
+      const serviceCall = user.isActive 
+        ? this.userService.deactivateUser(user.id)
+        : this.userService.activateUser(user.id);
+
+      serviceCall.subscribe({
+        next: () => {
+          this.snackBar.open(`User ${action}d successfully`, 'Close', {duration: 3000});
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.snackBar.open(`Failed to ${action} user`, 'Close', {duration: 3000});
+        }
+      });
+    }
+  }
+
+  deleteUser(user: User): void {
+    const userName = this.getFullName(user);
+    if (confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.snackBar.open('User deleted successfully', 'Close', {duration: 3000});
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.snackBar.open('Failed to delete user', 'Close', {duration: 3000});
+        }
+      });
+    }
   }
 
   // Book operations

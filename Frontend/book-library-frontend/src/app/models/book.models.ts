@@ -7,6 +7,10 @@ export interface Book {
   publicationYear: number;
   genreId: number;
   genreName: string;
+  averageRating: number | null;
+  summary: string;
+  myRating?: number;
+  isFavorite?: boolean;
 }
 
 export interface CreateBookDto {

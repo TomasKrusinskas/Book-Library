@@ -20,6 +20,23 @@ mat-card-title {
   font-size: 2rem;
   font-weight: 700;
   color: #3730a3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .favorite-btn {
+    margin-left: auto;
+    
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      
+      &.favorite {
+        color: #ef4444;
+      }
+    }
+  }
 }
 
 mat-card-subtitle {
@@ -78,6 +95,33 @@ mat-card-actions {
   margin-bottom: 10px;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.10);
+}
+
+.user-rating-row {
+  margin: 12px 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  .star {
+    font-size: 2rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.1s;
+    &.filled {
+      color: #fbbf24;
+      text-shadow: 0 2px 8px #fde68a66;
+    }
+    &.editable:hover {
+      color: #f59e42;
+      transform: scale(1.15);
+    }
+  }
+  .submitting {
+    margin-left: 8px;
+    font-size: 0.95rem;
+    color: #6366f1;
+  }
 }
 
 @media (max-width: 600px) {

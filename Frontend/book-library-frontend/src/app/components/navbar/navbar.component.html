@@ -5,6 +5,13 @@
   <button mat-button routerLink="/books">Books</button>
   <button mat-button routerLink="/genres">Genres</button>
 
+  @if (isLoggedIn()) {
+    <button mat-button routerLink="/favorites">
+      <mat-icon>favorite</mat-icon>
+      Favorites
+    </button>
+  }
+
   @if (isAdmin()) {
     <button mat-button routerLink="/admin">Admin Dashboard</button>
   }

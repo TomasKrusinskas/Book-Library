@@ -85,6 +85,47 @@ namespace Backend.Migrations
                     { 49, "Josh Malerman", "Post-apocalyptic horror", 8, "978-0062259653", 2014, "Bird Box" },
                     { 50, "Casey McQuiston", "Romantic comedy novel", 9, "978-1250316776", 2019, "Red, White & Royal Blue" }
                 });
+
+            migrationBuilder.AddColumn<string>(
+                name: "Summary",
+                table: "Books",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.CreateTable(
+                name: "BookRatings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    Rating = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookRatings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookRatings_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookRatings_BookId_UserId",
+                table: "BookRatings",
+                columns: new[] { "BookId", "UserId" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -354,6 +395,13 @@ namespace Backend.Migrations
                 table: "Genres",
                 keyColumn: "Id",
                 keyValue: 10);
+
+            migrationBuilder.DropColumn(
+                name: "Summary",
+                table: "Books");
+
+            migrationBuilder.DropTable(
+                name: "BookRatings");
         }
     }
 }

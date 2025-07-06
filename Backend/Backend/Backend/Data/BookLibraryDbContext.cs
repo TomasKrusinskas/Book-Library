@@ -12,6 +12,8 @@ namespace BookLibrary.Data
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<BookRating> BookRatings { get; set; }
+        public DbSet<UserFavorite> UserFavorites { get; set; }
 
         public BookLibraryDbContext(DbContextOptions<BookLibraryDbContext> options)
             : base(options)
@@ -107,6 +109,39 @@ namespace BookLibrary.Data
                 new Book { Id = 49, Title = "Bird Box", Author = "Josh Malerman", ISBN = "978-0062259653", Description = "Post-apocalyptic horror", PublicationYear = 2014, GenreId = 8 },
                 new Book { Id = 50, Title = "Red, White & Royal Blue", Author = "Casey McQuiston", ISBN = "978-1250316776", Description = "Romantic comedy novel", PublicationYear = 2019, GenreId = 9 }
             );
+
+            builder.Entity<BookRating>()
+                .HasKey(br => br.Id);
+            builder.Entity<BookRating>()
+                .HasOne(br => br.Book)
+                .WithMany()
+                .HasForeignKey(br => br.BookId);
+            builder.Entity<BookRating>()
+                .HasOne(br => br.User)
+                .WithMany()
+                .HasForeignKey(br => br.UserId);
+            builder.Entity<BookRating>()
+                .HasIndex(br => new { br.BookId, br.UserId }).IsUnique();
+
+            // Configure Book-BookRating relationship
+            builder.Entity<Book>()
+                .HasMany(b => b.BookRatings)
+                .WithOne(br => br.Book)
+                .HasForeignKey(br => br.BookId);
+
+            // Configure UserFavorite relationships
+            builder.Entity<UserFavorite>()
+                .HasKey(uf => uf.Id);
+            builder.Entity<UserFavorite>()
+                .HasOne(uf => uf.User)
+                .WithMany()
+                .HasForeignKey(uf => uf.UserId);
+            builder.Entity<UserFavorite>()
+                .HasOne(uf => uf.Book)
+                .WithMany()
+                .HasForeignKey(uf => uf.BookId);
+            builder.Entity<UserFavorite>()
+                .HasIndex(uf => new { uf.BookId, uf.UserId }).IsUnique();
         }
     }
 }

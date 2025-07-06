@@ -7,5 +7,6 @@ namespace BookLibrary.Repositories.Interfaces
         Task<IEnumerable<Book>> GetBooksByGenreAsync(int genreId);
         Task<IEnumerable<Book>> GetBooksWithGenreAsync();
         Task<Book?> GetByIdWithGenreAsync(int id);
+        double GetAverageRating(int bookId);
     }
 }

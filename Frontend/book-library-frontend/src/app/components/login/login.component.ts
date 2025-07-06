@@ -48,7 +48,18 @@ export class LoginComponent {
           this.router.navigate(['/books']);
         },
         error: (error) => {
-          this.snackBar.open('Login failed. Please check your credentials.', 'Close', { duration: 3000 });
+          let errorMessage = 'Login failed. Please check your credentials.';
+          
+          // Try to extract the error message from the backend response
+          if (error.error && typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
         }
       });
     }

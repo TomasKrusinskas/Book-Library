@@ -1,13 +1,30 @@
 <div class="book-list-container">
   <div class="header">
     <h1>Books</h1>
-
-    <div class="custom-filter">
-      <label for="genreSelect">Filter by Genre:</label>
-      <select id="genreSelect" [(ngModel)]="selectedGenreId" (change)="filterBooks()">
-        <option [value]="0">All Genres</option>
-        <option *ngFor="let genre of genres()" [value]="genre.id">{{ genre.name }}</option>
-      </select>
+    <div class="filters-row">
+      <div class="custom-filter">
+        <label for="genreSelect">Filter by Genre:</label>
+        <select id="genreSelect" [(ngModel)]="selectedGenreId" (change)="filterBooks()">
+          <option [value]="0">All Genres</option>
+          <option *ngFor="let genre of genres()" [value]="genre.id">{{ genre.name }}</option>
+        </select>
+      </div>
+      <div class="custom-filter">
+        <label>
+          <input type="checkbox" [(ngModel)]="showRatedOnly" (change)="filterBooks()" />
+          Show only rated books
+        </label>
+      </div>
+      <div class="custom-filter">
+        <label for="sortSelect">Sort by:</label>
+        <select id="sortSelect" [(ngModel)]="sortOption" (change)="filterBooks()">
+          <option value="none">Default</option>
+          <option value="highest">Highest Rating</option>
+          <option value="lowest">Lowest Rating</option>
+          <option value="yearAsc">Year (Oldest First)</option>
+          <option value="yearDesc">Year (Newest First)</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -24,6 +41,18 @@
           </mat-card-header>
           <mat-card-content>
             <p class="genre-badge">{{ book.genreName }}</p>
+            <div class="rating-row">
+              <ng-container *ngIf="book.averageRating && book.averageRating > 0; else noRating">
+                <span class="stars">
+                  <ng-container *ngFor="let _ of getStarsArray(book.averageRating)">★</ng-container>
+                  <span class="empty-stars"><ng-container *ngFor="let _ of getEmptyStarsArray(book.averageRating)">☆</ng-container></span>
+                </span>
+                <span class="avg-rating">{{ book.averageRating.toFixed(2) }}/5</span>
+              </ng-container>
+              <ng-template #noRating>
+                <span class="no-rating">No ratings yet</span>
+              </ng-template>
+            </div>
             <p>{{ book.description }}</p>
           </mat-card-content>
           <mat-card-actions>
@@ -33,7 +62,9 @@
               <span><strong>ISBN:</strong> {{ book.isbn }}</span>
             </div>
             <span class="spacer"></span>
-            <button mat-stroked-button color="primary" [routerLink]="['/books', book.id]">View Details</button>
+            <div class="book-actions">
+              <button mat-stroked-button color="primary" [routerLink]="['/books', book.id]">View Details</button>
+            </div>
           </mat-card-actions>
         </mat-card>
       }

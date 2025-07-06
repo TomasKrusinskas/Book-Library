@@ -1,4 +1,6 @@
-﻿namespace BookLibrary.Data.Entities
+﻿using System.Collections.Generic;
+
+namespace BookLibrary.Data.Entities
 {
     public class Book
     {
@@ -10,5 +12,7 @@
         public int PublicationYear { get; set; }
         public int GenreId { get; set; }
         public Genre Genre { get; set; } = null!;
+        public string Summary { get; set; } = string.Empty;
+        public ICollection<BookRating> BookRatings { get; set; } = new List<BookRating>();
     }
 }

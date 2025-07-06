@@ -1,8 +1,13 @@
-﻿using BookLibrary.Data.Entities;
+﻿using BookLibrary.Data;
+using BookLibrary.Data.Entities;
 using BookLibrary.DTOs;
 using BookLibrary.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookLibrary.Controllers
 {
@@ -12,10 +17,12 @@ namespace BookLibrary.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
+        private readonly BookLibraryDbContext _context;
 
-        public BooksController(IBookRepository bookRepository)
+        public BooksController(IBookRepository bookRepository, BookLibraryDbContext context)
         {
             _bookRepository = bookRepository;
+            _context = context;
         }
 
         [HttpGet]
@@ -32,7 +39,9 @@ namespace BookLibrary.Controllers
                 Description = b.Description,
                 PublicationYear = b.PublicationYear,
                 GenreId = b.GenreId,
-                GenreName = b.Genre?.Name ?? ""
+                GenreName = b.Genre?.Name ?? "",
+                Summary = b.Description?.Length > 120 ? b.Description.Substring(0, 120) + "..." : b.Description,
+                AverageRating = _bookRepository.GetAverageRating(b.Id)
             });
 
             return Ok(bookDtos);
@@ -58,7 +67,9 @@ namespace BookLibrary.Controllers
                 Description = book.Description,
                 PublicationYear = book.PublicationYear,
                 GenreId = book.GenreId,
-                GenreName = book.Genre?.Name ?? ""
+                GenreName = book.Genre?.Name ?? "",
+                Summary = book.Description?.Length > 120 ? book.Description.Substring(0, 120) + "..." : book.Description,
+                AverageRating = _bookRepository.GetAverageRating(book.Id)
             });
         }
 
@@ -76,7 +87,9 @@ namespace BookLibrary.Controllers
                 Description = b.Description,
                 PublicationYear = b.PublicationYear,
                 GenreId = b.GenreId,
-                GenreName = b.Genre?.Name ?? ""
+                GenreName = b.Genre?.Name ?? "",
+                Summary = b.Description?.Length > 120 ? b.Description.Substring(0, 120) + "..." : b.Description,
+                AverageRating = _bookRepository.GetAverageRating(b.Id)
             });
 
             return Ok(bookDtos);
@@ -93,7 +106,9 @@ namespace BookLibrary.Controllers
                 ISBN = createBookDto.ISBN,
                 Description = createBookDto.Description,
                 PublicationYear = createBookDto.PublicationYear,
-                GenreId = createBookDto.GenreId
+                GenreId = createBookDto.GenreId,
+                // Add Summary if needed
+                // Summary = createBookDto.Summary
             };
 
             await _bookRepository.AddAsync(book);
@@ -107,7 +122,10 @@ namespace BookLibrary.Controllers
                 ISBN = book.ISBN,
                 Description = book.Description,
                 PublicationYear = book.PublicationYear,
-                GenreId = book.GenreId
+                GenreId = book.GenreId,
+                GenreName = book.Genre?.Name ?? "",
+                Summary = book.Description?.Length > 120 ? book.Description.Substring(0, 120) + "..." : book.Description,
+                AverageRating = 0
             });
         }
 
@@ -127,6 +145,7 @@ namespace BookLibrary.Controllers
             book.Description = updateBookDto.Description;
             book.PublicationYear = updateBookDto.PublicationYear;
             book.GenreId = updateBookDto.GenreId;
+            // book.Summary = updateBookDto.Summary;
 
             _bookRepository.Update(book);
             await _bookRepository.SaveAsync();
@@ -148,6 +167,49 @@ namespace BookLibrary.Controllers
             await _bookRepository.SaveAsync();
 
             return NoContent();
+        }
+
+        [HttpPost("{id}/rate")]
+        [Authorize]
+        public async Task<IActionResult> RateBook(int id, [FromBody] int rating)
+        {
+            if (rating < 1 || rating > 5)
+                return BadRequest("Rating must be between 1 and 5.");
+
+            var userId = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized();
+
+            var existing = await _context.BookRatings.FirstOrDefaultAsync(r => r.BookId == id && r.UserId == userId);
+            if (existing != null)
+            {
+                existing.Rating = rating;
+                existing.CreatedAt = DateTime.UtcNow;
+                _context.BookRatings.Update(existing);
+            }
+            else
+            {
+                _context.BookRatings.Add(new BookRating
+                {
+                    BookId = id,
+                    UserId = userId,
+                    Rating = rating,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpGet("{id}/my-rating")]
+        [Authorize]
+        public async Task<ActionResult<int?>> GetMyRating(int id)
+        {
+            var userId = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return Unauthorized();
+            var rating = await _context.BookRatings.FirstOrDefaultAsync(r => r.BookId == id && r.UserId == userId);
+            return Ok(rating?.Rating);
         }
     }
 }
