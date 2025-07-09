@@ -54,7 +54,7 @@ export class BookListComponent implements OnInit {
     private genreService: GenreService,
     private cartService: CartService,
     private route: ActivatedRoute,
-    private auth: AuthService,
+    public auth: AuthService,
     private snackBar: MatSnackBar
   ) {
     this.isLoggedIn = this.auth.isLoggedIn;
@@ -171,6 +171,10 @@ export class BookListComponent implements OnInit {
   }
 
   addToCart(book: Book): void {
+    if (!this.auth.isLoggedIn) {
+      this.snackBar.open('You must be logged in to add items to the cart.', 'Close', { duration: 2000 });
+      return;
+    }
     this.cartService.addToCart(book);
     this.snackBar.open(`${book.title} added to cart`, 'Close', { duration: 2000 });
   }

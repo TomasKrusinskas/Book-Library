@@ -73,7 +73,7 @@
             <span class="spacer"></span>
             <div class="book-actions">
               <button mat-stroked-button color="primary" [routerLink]="['/books', book.id]">View Details</button>
-              <button mat-raised-button color="accent" (click)="addToCart(book)">
+              <button mat-raised-button color="accent" (click)="addToCart(book)" [disabled]="!auth.isLoggedIn">
                 <mat-icon>add_shopping_cart</mat-icon>
                 Add to Cart
               </button>

@@ -124,7 +124,7 @@
 
               <!-- Action Buttons -->
               <div class="action-buttons">
-                <button mat-raised-button color="accent" class="add-to-cart-btn" (click)="addToCart()">
+                <button mat-raised-button color="accent" class="add-to-cart-btn" (click)="addToCart()" [disabled]="!isLoggedIn">
                   <mat-icon>add_shopping_cart</mat-icon>
                   Add to Cart
                 </button>

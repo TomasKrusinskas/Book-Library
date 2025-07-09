@@ -163,8 +163,10 @@ export class BookDetailsComponent implements OnInit {
   }
 
   addToCart(): void {
-    if (!this.book) return;
-    
+    if (!this.isLoggedIn || !this.book) {
+      this.snackBar.open('You must be logged in to add items to the cart.', 'Close', { duration: 2000 });
+      return;
+    }
     this.cartService.addToCart(this.book);
     this.snackBar.open(`"${this.book.title}" added to cart`, 'Close', { duration: 3000 });
   }

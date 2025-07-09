@@ -12,6 +12,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: MainPageComponent },
@@ -20,15 +21,15 @@ export const routes: Routes = [
   { path: 'books', component: BookListComponent },
   { path: 'genres', component: GenreListComponent },
   { path: 'books/:id', component: BookDetailsComponent },
-  { path: 'favorites', component: FavoritesComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'cart', component: CartComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'orders', component: OrdersComponent },
-  { path: 'payment/:orderId', component: PaymentComponent },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
+  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard] },
+  { path: 'payment/:orderId', component: PaymentComponent, canActivate: [AuthGuard] },
   {
     path: 'admin',
     component: AdminDashboardComponent,
-    // Add auth guard here later
+    canActivate: [AuthGuard]
   }
 ];

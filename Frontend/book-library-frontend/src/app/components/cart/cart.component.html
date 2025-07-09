@@ -61,7 +61,8 @@
         <mat-card-actions>
           <button mat-raised-button color="primary" 
                   (click)="proceedToCheckout()" 
-                  class="checkout-btn">
+                  class="checkout-btn"
+                  [disabled]="!authService.isLoggedIn">
             Proceed to Checkout
           </button>
           <button mat-stroked-button (click)="continueShopping()">

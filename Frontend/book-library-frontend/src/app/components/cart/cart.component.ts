@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../models/order.models';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -36,7 +37,8 @@ export class CartComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +75,11 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   proceedToCheckout(): void {
+    if (!this.authService.isLoggedIn) {
+      this.snackBar.open('You must be logged in to proceed to checkout.', 'Close', { duration: 2000 });
+      this.router.navigate(['/login']);
+      return;
+    }
     if (this.cartItems.length === 0) {
       this.snackBar.open('Your cart is empty', 'Close', { duration: 2000 });
       return;
